@@ -6,15 +6,18 @@ export const User = model("user", new Schema({
   language: String,
   action: String,
   languageCode: String,
-  createdAt: Date,
-  updatedAt: Date,
+
+  spotify: {
+    type: Boolean,
+    default: false
+  },
 
   spotifyAccessToken: String,
   spotifyRefreshToken: String,
   spotifyTokenType: String,
   spotifyExpiresIn: Number,
   spotifyScope: String,
-}));
+}, { timestamps: true }));
 
 export interface UserModel {
   _id: string;
@@ -25,6 +28,8 @@ export interface UserModel {
   languageCode: string;
   createdAt: Date;
   updatedAt: Date;
+
+  spotify: boolean;
 
   spotifyAccessToken: string;
   spotifyRefreshToken: string;

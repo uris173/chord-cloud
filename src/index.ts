@@ -6,11 +6,12 @@ import bot from "./bot/bot";
 import { webhookCallback } from "grammy";
 import { connect } from "mongoose";
 import { join } from "path";
+import { spotify } from './routers/spotify';
 
 const app = express();
 app.use(express.json());
 app.use("/files", express.static(join(__dirname, "../", "files")));
-
+app.use('/spotify', spotify);
 
 (async () => {
   try {

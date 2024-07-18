@@ -1,4 +1,5 @@
 export interface SpotifyErrorDto {
+  data?: any;
   message: string;
   description: string;
 }
@@ -37,7 +38,9 @@ export interface SpotifyItemDto {
 };
 
 export interface SpotifyTracksDto {
-  track: SpotifyItemDto;
+  items: [{
+    track: SpotifyItemDto;
+  }]
 }
 
 export interface SpotifyDown {

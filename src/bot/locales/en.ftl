@@ -5,7 +5,8 @@ linkAccountService = Hi!
   To share music, first link your account to the service...
 process = Processing ⏳ 
 wait = <i>Please wait, the file is loading...</i>
-
+share = Share a song 🎵
+tryIt = Try it now...
 
 # Error message
 tokenError = Token error!
@@ -15,7 +16,7 @@ serverError = Oops, something went wrong. Server error!
 # Keyboard
 start = Start bot
 logIn = Log in 🔓
-try = Try in 🔍
+try = Try it 🔍
 links = Links 🔗
 donate = Sponsor 💸
 changeLanguage = Change language 🌐

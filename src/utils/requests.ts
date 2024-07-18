@@ -18,12 +18,13 @@ interface Response<T> {
   data?: T;
   error?: SpotifyErrorDto;
   status: number;
-}
+  message?: string
+};
 
 const spotifyApiRequest = async <T>(config: AxiosRequestConfig): Promise<Response<T>> => {
   try {
     const response: AxiosResponse = await axios(config);
-    return { data: response.data as T, status: response.status };
+    return { data: response.data as T, status: response.status, message: 'ok' };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       console.error("RESPONSE", error.response);
@@ -31,6 +32,7 @@ const spotifyApiRequest = async <T>(config: AxiosRequestConfig): Promise<Respons
       return {
         status: error.response.status,
         error: {
+          data: error.response.data,
           message: "Api error",
           description: 'Error in "spotifyApiRequest" function',
         },
@@ -83,4 +85,43 @@ export const spotifyTokenRefresh = async (token: string, userId: number): Promis
     } });
   };
   return response;
+}
+
+export const nowSpotifyTrack = async (token: string): Promise<Response<{item: SpotifyItemDto}>> => {
+  const config: AxiosRequestConfig = {
+    url: 'https://api.spotify.com/v1/me/player/currently-playing',
+    method: 'GET',
+    params: { 'limit': 1 },
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
+  return await spotifyApiRequest<{item: SpotifyItemDto}>(config);
+};
+
+export const recentlySpotifyTracks = async (token: string, limit: number): Promise<Response<SpotifyTracksDto>> => {
+  const config: AxiosRequestConfig = {
+    url: 'https://api.spotify.com/v1/me/player/recently-played',
+    method: 'GET',
+    params: { 'limit': limit },
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
+  return await spotifyApiRequest<SpotifyTracksDto>(config);
+}
+
+export const spotifyDown = async (id: string): Promise<Response<SpotifyDown>> => {
+  const config: AxiosRequestConfig = {
+    url: `https://api.spotifydown.com/download/${id}`,
+    method: 'GET',
+    headers: {
+      Origin: "https://spotifydown.com",
+      Referer: "https://spotifydown.com"
+    }
+  }
+
+  return await spotifyApiRequest<SpotifyDown>(config);
 }
