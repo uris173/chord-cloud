@@ -44,6 +44,7 @@ router.get('/auth-code', async (req: Request, res: Response) => {
     await User.findOneAndUpdate({ userId }, { 
       $set: {
         spotify: true,
+        spotifyRefreshed: Date.now(),
         spotifyAccessToken: access_token,
         spotifyExpiresIn: expires_in,
         spotifyRefreshToken: refresh_token,

@@ -1,9 +1,10 @@
 import { Context as DefaultContect, SessionFlavor } from "grammy";
 import { I18nFlavor } from "@grammyjs/i18n";
 
-interface SessionData {
+export interface SessionData {
   __language_code?: string;
-  spotify: string;
+  userId?: string;
+  timestamp?: number;
 }
 
-export type Context = DefaultContect & I18nFlavor; // SessionFlavor<SessionData> &
+export type Context = DefaultContect & I18nFlavor & SessionFlavor<SessionData>;

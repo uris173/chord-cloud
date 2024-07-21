@@ -1,6 +1,8 @@
 import { User } from "../../models/user.model";
+import { sessionStorage } from "../bot";
 import { Context } from "../context";
 import { i18n } from "../i18n";
+import { checkUserAuthService } from "../options/helper";
 import { keyboards } from "../options/keyboards";
 
 enum LanguageCode {
@@ -11,10 +13,10 @@ enum LanguageCode {
 
 export const start = async (ctx: Context) => {
   const chatId = ctx.from?.id;
-  const languageCode = ctx.from!.language_code || 'en';
+  let languageCode = ctx.session.__language_code || 'en'
   const locale: LanguageCode = i18n.locales.includes(languageCode) ? languageCode as LanguageCode : LanguageCode.EN;
   await ctx.i18n.renegotiateLocale();
-
+  
   ctx.api.setMyCommands([
     { command: '/start', description: ctx.t('start') },
     { command: "/login", description: ctx.t('logIn') },
@@ -23,14 +25,18 @@ export const start = async (ctx: Context) => {
     { command: "/donate", description: ctx.t('donate') },
     { command: "/language", description: ctx.t('changeLanguage') },
   ], {
-    language_code: locale
+    scope: {
+      chat_id: chatId!,
+      type: "chat",
+    },
   });
 
   const user = await User.findOne({ userId: chatId })
-  await ctx.reply(`${ctx.t("chooseMenu")}\n\n/start - ${ctx.t('start')}\n/login - ${ctx.t('logIn')}\n/try - ${ctx.t('try')}\n/links - ${ctx.t('links')}\n/donate - ${ctx.t('donate')}\n/language - ${ctx.t('changeLanguage')}`)
-
+  
   if (user) {
-    let platform = user.spotify ? 'spotify-' : 'yandex-'
+    if (!user.spotify) return logIn(ctx)
+    
+    let platform = user.spotify ? 'spotify' : 'yandex'
     await ctx.reply(ctx.t('share'), {
       reply_markup: {
         inline_keyboard: [
@@ -42,6 +48,7 @@ export const start = async (ctx: Context) => {
       }
     })
   } else {
+    await ctx.reply(`${ctx.t("selectMenu")}\n\n/start - ${ctx.t('start')}\n/login - ${ctx.t('logIn')}\n/try - ${ctx.t('try')}\n/links - ${ctx.t('links')}\n/donate - ${ctx.t('donate')}\n/language - ${ctx.t('changeLanguage')}`)
     await User.create({
       userId: chatId,
       name: ctx.from!.first_name,
@@ -52,10 +59,61 @@ export const start = async (ctx: Context) => {
 }
 
 export const logIn = async (ctx: Context) => {
-  const chatId = ctx.from!.id
-  const messageId = ctx.message!.message_id
+  await checkUserAuthService(ctx, ctx.t('alreadyAuthorized'))
+}
 
-  ctx.reply(ctx.t('linkAccountService'), {
-    reply_markup: keyboards['logIn'](chatId, messageId + 1)
+export const tryIt = async (ctx: Context) => {
+  await checkUserAuthService(ctx, ctx.t('tryIt'))
+}
+
+export const links = async (ctx: Context) => {
+  ctx.reply(`${ctx.t('botSlogan')}\n${ctx.t('chanelLink')}\n${ctx.t('groupLink')}`, {
+    parse_mode: 'HTML'
   })
+}
+
+export const donate = async (ctx: Context) => {
+  ctx.reply(ctx.t('donateWallets'), {
+    parse_mode: 'HTML'
+  })
+}
+
+export const changeLanguage = async (ctx: Context) => {
+  ctx.reply(ctx.t('selectLanguage'), {
+    reply_markup: keyboards.languages(ctx)
+  })
+}
+
+export const selectLanguage = async (ctx: Context) => {
+  const text = ctx.message?.text
+  const userId = ctx.from?.id
+  if (text && userId) {
+    const languageCode = text === ctx.t('en') ? 'en' : text === ctx.t('uk') ? 'uk' : 'ru'
+
+    if (i18n.locales.includes(languageCode)) {
+      await ctx.i18n.setLocale(languageCode)
+      // ctx.session.__language_code = languageCode;
+      await User.findOneAndUpdate({ userId }, { $set: { languageCode } })
+
+      await ctx.api.setMyCommands([
+        { command: '/start', description: ctx.t('start') },
+        { command: "/login", description: ctx.t('logIn') },
+        { command: "/try", description: ctx.t('try') },
+        { command: "/links", description: ctx.t('links') },
+        { command: "/donate", description: ctx.t('donate') },
+        { command: "/language", description: ctx.t('changeLanguage') },
+      ], {
+        scope: {
+          chat_id: userId!,
+          type: "chat",
+        },
+      });
+
+      ctx.reply(ctx.t('languageChanged'), {
+        reply_markup: {
+          remove_keyboard: true
+        }
+      })
+    }
+  }
 }

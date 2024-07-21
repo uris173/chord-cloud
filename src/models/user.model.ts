@@ -12,6 +12,7 @@ export const User = model("user", new Schema({
     default: false
   },
 
+  spotifyRefreshed: Date,
   spotifyAccessToken: String,
   spotifyRefreshToken: String,
   spotifyTokenType: String,
@@ -31,6 +32,7 @@ export interface UserModel {
 
   spotify: boolean;
 
+  spotifyRefreshed: Date;
   spotifyAccessToken: string;
   spotifyRefreshToken: string;
   spotifyTokenType: string;

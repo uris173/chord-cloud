@@ -27,8 +27,8 @@ const spotifyApiRequest = async <T>(config: AxiosRequestConfig): Promise<Respons
     return { data: response.data as T, status: response.status, message: 'ok' };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      console.error("RESPONSE", error.response);
-      console.error("STATUS", error.status);
+      console.error("RESPONSE", error.response.data);
+      console.error("STATUS", error.response.status);
       return {
         status: error.response.status,
         error: {
@@ -81,6 +81,7 @@ export const spotifyTokenRefresh = async (token: string, userId: number): Promis
   const response = await spotifyApiRequest<SpotifyRefreshTokenDto>(config);
   if (response.data) {
     await User.findOneAndUpdate({ userId }, { $set: {
+      spotifyRefreshed: Date.now(),
       spotifyAccessToken: response.data.access_token
     } });
   };

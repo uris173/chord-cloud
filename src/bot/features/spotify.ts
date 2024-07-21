@@ -2,10 +2,10 @@ import { Composer } from "grammy";
 import { Context } from "../context";
 const composer = new Composer<Context>()
 
-import { spotifyNowPlay } from "../handlers/spotify";
-import { InlineQueryResultAudio } from "grammy/types";
+import { spotifyTracks, chosenSpotifyTrack } from "../handlers/spotify";
 
-composer.inlineQuery('spotify-', spotifyNowPlay)
+composer.inlineQuery('spotify', spotifyTracks)
+composer.chosenInlineResult(/spotify-/, chosenSpotifyTrack)
 
 
 export { composer as spotifyComposer }
