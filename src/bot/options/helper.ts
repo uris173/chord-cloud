@@ -2,6 +2,7 @@ import { NextFunction } from "grammy";
 import { User } from "../../models/user.model";
 import { Context, SessionData } from "../context";
 import { keyboards } from "./keyboards";
+import { i18n } from "../i18n";
 
 export const languageFilter = (ctx: Context) => [ctx.t('en'), ctx.t('uk'), ctx.t('ru')].includes(ctx.message?.text!)
 
@@ -55,14 +56,14 @@ export const initialSession = async (ctx: Context): Promise<SessionData> => {
   if (findUser) {
     return {
       userId,
-      __language_code: findUser.languageCode!,
+      __language_code: findUser.language!,
       timestamp: Date.now()
     };
   }
 
   return {
     userId,
-    __language_code: ctx.from?.language_code || 'en',
+    __language_code: i18n.locales.includes(ctx.from?.language_code!) ? ctx.from?.language_code : 'en',
     timestamp: Date.now()
   };
 }

@@ -11,6 +11,8 @@ connectService = Connect streaming service.
 alreadyAuthorized = You are already logged in. Type the /logout command to log out.
 botSlogan = <i>Share moments, finding harmony in the sounds</i>
 languageChanged = Language changed!
+emptyTrackInfo = If you have problems with the songs, write the /logout command and log in again. If this does not solve the problem, try after a while or contact the support chat
+logedOut = You have logged out of the service
 
 # Links
 chanel = <a href="google.com">Chanel</a>
@@ -25,6 +27,7 @@ donateWallets = For tea/coffee for the admin
 # Error message
 tokenError = Token error!
 serverError = Oops, something went wrong. Server error!
+emptyResult = Oops, I didn't find the song...
 
 # Keyboard
 start = Start bot

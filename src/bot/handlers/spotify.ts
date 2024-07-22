@@ -50,7 +50,14 @@ export const spotifyTracks = async (ctx: Context) => {
     }
 
     let result = await spotifyInlineTracks(spotifyAccessToken, ctx)
-    ctx.answerInlineQuery(result, { cache_time: 0 })
+    if (result.length) return ctx.answerInlineQuery(result, { cache_time: 0 })
+    return ctx.answerInlineQuery([], {
+      button: {
+        text: ctx.t('emptyResult'),
+        start_parameter: 'info'
+      },
+      cache_time: 0
+    })
   } else {
     ctx.answerInlineQuery([], { ...connectToService(ctx), cache_time: 0 })
   }

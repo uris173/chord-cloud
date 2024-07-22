@@ -8,7 +8,8 @@ import {
   links,
   donate,
   changeLanguage,
-  selectLanguage
+  selectLanguage,
+  logOut,
 } from "../handlers/main";
 import { languageFilter } from "../options/helper";
 
@@ -18,8 +19,10 @@ composer.command('try', tryIt)
 composer.command('links', links)
 composer.command('donate', donate)
 composer.command('language', changeLanguage)
+composer.command('logout', logOut)
 
 composer.filter(languageFilter).on(':text', selectLanguage)
+
 
 
 export { composer as mainComposer }

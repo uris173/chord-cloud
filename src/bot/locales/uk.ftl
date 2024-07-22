@@ -11,6 +11,8 @@ connectService = Прив'язати стрімінговий сервіс.
 alreadyAuthorized = Ви вже авторизовані. Напишіть /logout, щоб завершити сеанс.
 botSlogan = <i>Розділяй моменти, знаходячи гармонію у звуках</i>
 languageChanged = Мова змінена!
+emptyTrackInfo = Якщо у вас проблеми з піснями, напишіть команду /logout і увійти знову. Якщо це не вирішить проблему спробуйте через деякий час або звернутися в чат Підтримки
+logedOut = Ви вийшли з сервісу
 
 # Links
 chanel = <a href="google.com">Канал</a>
@@ -25,6 +27,7 @@ donateWallets = Адміну на чай/каву
 # Error message
 tokenError = Помилка токена!
 serverError = Упс, щось пішло не так. Помилка сервера!
+emptyResult = Ой, я не знайшов пісні...
 
 # Keyboard
 start = Запустити бота

@@ -12,12 +12,30 @@ export const User = model("user", new Schema({
     default: false
   },
 
-  spotifyRefreshed: Date,
-  spotifyAccessToken: String,
-  spotifyRefreshToken: String,
-  spotifyTokenType: String,
-  spotifyExpiresIn: Number,
-  spotifyScope: String,
+  spotifyRefreshed: {
+    type: Date,
+    default: null
+  },
+  spotifyAccessToken: {
+    type: String,
+    default: null
+  },
+  spotifyRefreshToken: {
+    type: String,
+    default: null
+  },
+  spotifyTokenType: {
+    type: String,
+    default: null
+  },
+  spotifyExpiresIn: {
+    type: Number,
+    default: null
+  },
+  spotifyScope: {
+    type: String,
+    default: null
+  },
 }, { timestamps: true }));
 
 export interface UserModel {
@@ -32,10 +50,10 @@ export interface UserModel {
 
   spotify: boolean;
 
-  spotifyRefreshed: Date;
-  spotifyAccessToken: string;
-  spotifyRefreshToken: string;
-  spotifyTokenType: string;
-  spotifyExpiresIn: number;
-  spotifyScope: string;
+  spotifyRefreshed: Date | null;
+  spotifyAccessToken: string | null;
+  spotifyRefreshToken: string | null;
+  spotifyTokenType: string | null;
+  spotifyExpiresIn: number | null;
+  spotifyScope: string | null;
 }

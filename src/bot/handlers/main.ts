@@ -12,6 +12,8 @@ enum LanguageCode {
 }
 
 export const start = async (ctx: Context) => {
+  if (ctx.match === 'info') return ctx.reply(ctx.t('emptyTrackInfo'))
+
   const chatId = ctx.from?.id;
   let languageCode = ctx.session.__language_code || 'en'
   const locale: LanguageCode = i18n.locales.includes(languageCode) ? languageCode as LanguageCode : LanguageCode.EN;
@@ -88,12 +90,12 @@ export const selectLanguage = async (ctx: Context) => {
   const text = ctx.message?.text
   const userId = ctx.from?.id
   if (text && userId) {
-    const languageCode = text === ctx.t('en') ? 'en' : text === ctx.t('uk') ? 'uk' : 'ru'
+    const language = text === ctx.t('en') ? 'en' : text === ctx.t('uk') ? 'uk' : 'ru'
 
-    if (i18n.locales.includes(languageCode)) {
-      await ctx.i18n.setLocale(languageCode)
-      // ctx.session.__language_code = languageCode;
-      await User.findOneAndUpdate({ userId }, { $set: { languageCode } })
+    if (i18n.locales.includes(language)) {
+      await ctx.i18n.setLocale(language)
+      ctx.session.__language_code = language;
+      await User.findOneAndUpdate({ userId }, { $set: { language } })
 
       await ctx.api.setMyCommands([
         { command: '/start', description: ctx.t('start') },
@@ -116,4 +118,22 @@ export const selectLanguage = async (ctx: Context) => {
       })
     }
   }
+}
+
+export const logOut = async (ctx: Context) => {
+  let userId = ctx.from?.id!
+  const user = await User.findOne({ userId })
+  if (user?.spotify) {
+    await User.findByIdAndUpdate(user._id, { $set: {
+      spotify: false,
+      spotifyRefreshed: null,
+      spotifyAccessToken: null,
+      spotifyRefreshToken: null,
+      spotifyTokenType: null,
+      spotifyExpiresIn: null,
+      spotifyScope: null
+    } })
+  }
+
+  return ctx.reply(ctx.t('logedOut'))
 }
