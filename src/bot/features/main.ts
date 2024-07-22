@@ -24,5 +24,4 @@ composer.command('logout', logOut)
 composer.filter(languageFilter).on(':text', selectLanguage)
 
 
-
 export { composer as mainComposer }
