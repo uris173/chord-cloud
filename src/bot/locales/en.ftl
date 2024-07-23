@@ -15,11 +15,11 @@ emptyTrackInfo = If you have problems with the songs, write the /logout command 
 logedOut = You have logged out of the service
 
 # Links
-chanel = <a href="google.com">Chanel</a>
-group = <a href="google.com">Group</a>
-bot = <a href="https://t.me/rhytmifybot">Bot</a>
-chanelLink = News: @chanel
-groupLink = Group: @group
+chanel = <a href="https://t.me/ChordCloudChanel">Chanel</a>
+group = <a href="https://t.me/ChordCloudGroup">Group</a>
+bot = <a href="https://t.me/ChordCloudBot">Bot</a>
+chanelLink = News: @ChordCloudChanel
+groupLink = Group: @ChordCloudGroup
 donateWallets = For tea/coffee for the admin
   BTC = <code>19sEx7hX3bJmFVm8mdYbQj14YrZijzhLRe</code>
   TON/NOT = <code>UQD7qGuw_b9DpiFr6GNWNM7J91asA4brgHzctKKlD-BHKPTj</code>

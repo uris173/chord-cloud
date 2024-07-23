@@ -1,8 +1,14 @@
-import { NextFunction } from "grammy";
+import { InputFile, NextFunction } from "grammy";
+import { InlineKeyboardMarkup, InputMediaAudio } from '@grammyjs/types';
 import { User } from "../../models/user.model";
 import { Context, SessionData } from "../context";
 import { keyboards } from "./keyboards";
 import { i18n } from "../i18n";
+
+interface MessageInlineMedia {
+  input: InputMediaAudio<InputFile>;
+  markup: InlineKeyboardMarkup;
+}
 
 export const languageFilter = (ctx: Context) => [ctx.t('en'), ctx.t('uk'), ctx.t('ru')].includes(ctx.message?.text!)
 
@@ -78,4 +84,23 @@ export const useSession = async (ctx: Context, next: NextFunction) => {
     }
   }
   await next();
+}
+
+export const messageInlineMedia = (media: string, caption: string, tryText: string): MessageInlineMedia => {
+  const inputMedia: InputMediaAudio<InputFile > = {
+    type: 'audio',
+    media: `${process.env.SERVER_URI}/${media}`,
+    caption,
+    parse_mode: 'HTML',
+  };
+
+  const markup: InlineKeyboardMarkup = {
+    inline_keyboard: [
+      [
+        { text: tryText, url: 'https://t.me/ChordCloudBot?start=/start' }
+      ]
+    ]
+  };
+
+  return { input: inputMedia, markup };
 }

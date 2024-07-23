@@ -1,10 +1,18 @@
 import bot from "../bot"
 import { Context } from "../context"
 
-import { User, UserModel } from "../../models/user.model"
-import { spotifyTokenRefresh } from "../../utils/requests"
+import { join, resolve } from 'path';
+import { readFile, writeFile } from 'fs'
+import { promisify } from 'util';
+import NodeID3 from 'node-id3';
+const writeFileAsync = promisify(writeFile);
+const readFileAsync = promisify(readFile);
+
+import { User } from "../../models/user.model"
+import { spotifyDown, spotifyTokenRefresh } from "../../utils/requests"
 import { spotifyInlineTracks } from "../options/spotify";
-import { connectToService } from "../options/helper";
+import { connectToService, messageInlineMedia } from "../options/helper";
+import axios from "axios";
 // import { spotifyInlineTracks } from "../options/helpers"
 
 export const spotifySuccessAuth = async (userId: number, messageId: number, language: string) => {
@@ -69,20 +77,71 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
   const inlineMessageId = chosenResult?.inline_message_id
 
   if (inlineMessageId) {
-    let trackLink = `<a href="https://open.spotify.com/track/${resultId[1]}">Spotify</a>`
+    const choosenId = resultId[1]
+
     try {
-      await ctx.api.editMessageMediaInline(inlineMessageId, {
-        type: 'audio',
-        media: `https://chatapi.of-astora.uz/files/music/Yen.mp3`,
-        caption: `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`,
-        parse_mode: 'HTML',
-      }, {
-        reply_markup: {
-          inline_keyboard: [[{ text: ctx.t('try'), url: 'https://t.me/rhytmifybot?start=/start' }]]
+      const { data, message, status } = await spotifyDown(choosenId)
+      if (status === 200 && data) {
+        const { metadata, link } = data
+  
+        const filePath = join(__dirname, `../../../files/spotify/${metadata.title}.mp3`)
+
+        const songResponse = await axios.get(link, { responseType: 'arraybuffer' });
+        const songBuffer = Buffer.from(songResponse.data);
+        const coverResponse = await axios.get(metadata.cover, { responseType: 'arraybuffer' });
+        const coverBuffer = Buffer.from(coverResponse.data);
+
+        const tags = {
+          artist: metadata.artists,
+          title: metadata.title,
+          album: metadata.album,
+          image: {
+            mime: "image/jpeg",
+            type: {
+              id: 3,
+              name: "front cover"
+            },
+            description: "Front Cover",
+            imageBuffer: coverBuffer
+          },
         }
-      })
+  
+        const successBuffer = NodeID3.write(tags, songBuffer);
+        if (successBuffer) {
+          await writeFileAsync(filePath, successBuffer);
+
+          let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`
+          let caption = `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
+          let path = `${process.env.SERVER_URI}/files/music/Gravity.mp3`
+          let inputMedia = messageInlineMedia(path, caption, ctx.t('try'))
+          
+          await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+            reply_markup: inputMedia.markup
+          })
+        } else {
+
+        }
+      } else {
+  
+      }
     } catch (error) {
-      console.error(error);
+      
     }
+
+    // let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`
+    // try {
+    //   await ctx.api.editMessageMediaInline(inlineMessageId, {
+    //     type: 'audio',
+    //     media: `${process.env.SERVER_URI}/files/oh-no_jojo.mp3`,
+    //     caption: `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`,
+    //     parse_mode: 'HTML',
+    //   }, {
+    //     reply_markup: {
+    //       inline_keyboard: [ [ { text: ctx.t('try'), url: 'https://t.me/rhytmifybot?start=/start' } ] ]
+    //     }
+    //   })
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
 }

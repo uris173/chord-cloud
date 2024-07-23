@@ -17,8 +17,8 @@ export const spotifyInlineTracks = async (token: string, ctx: Context) => {
     const description = ctx.t('wait');
     const result = data.map((val, index) => {
       let duration = val.duration_ms / 1000
-      let url = `https://chatapi.of-astora.uz/files/music/Gravity.mp3`;
-      // let url = `${process.env.LOCAL_URI}/files/spotify/${encodeURIComponent(val.title)}.mp3`;
+      let url = `${process.env.SERVER_URI}/files/music/Gravity.mp3`;
+      // let url = `${process.env.SERVER_URI}/files/yes-yes-yes_jojo.mp3`;
       
       return InlineQueryResultBuilder.audio(`spotify-${val.id}-${index}`, val.name, url, {
         audio_duration: parseInt(duration.toString(), 10),

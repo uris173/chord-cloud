@@ -15,11 +15,11 @@ emptyTrackInfo = Если у вас проблемы с песнями, напи
 logedOut = Вы вышли из сервиса
 
 # Links
-chanel = <a href="google.com">Канал</a>
-group = <a href="google.com">Группа</a>
-bot = <a href="https://t.me/rhytmifybot">Бот</a>
-chanelLink = Новости: @chanel
-groupLink = Группа: @group
+chanel = <a href="https://t.me/ChordCloudChanel">Канал</a>
+group = <a href="https://t.me/ChordCloudGroup">Группа</a>
+bot = <a href="https://t.me/ChordCloudBot">Бот</a>
+chanelLink = Новости: @ChordCloudChanel
+groupLink = Группа: @ChordCloudGroup
 donateWallets = Админу на чай/кохфе
   BTC = <code>19sEx7hX3bJmFVm8mdYbQj14YrZijzhLRe</code>
   TON/NOT = <code>UQD7qGuw_b9DpiFr6GNWNM7J91asA4brgHzctKKlD-BHKPTj</code>
