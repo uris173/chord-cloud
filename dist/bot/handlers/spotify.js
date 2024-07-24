@@ -25,6 +25,7 @@ const requests_1 = require("../../utils/requests");
 const spotify_1 = require("../options/spotify");
 const helper_1 = require("../options/helper");
 const axios_1 = __importDefault(require("axios"));
+const child_process_1 = require("child_process");
 // import { spotifyInlineTracks } from "../options/helpers"
 const spotifySuccessAuth = (userId, messageId, language) => __awaiter(void 0, void 0, void 0, function* () {
     const text = language === 'en' ? "Authorization was successful!\n\nType the command /logout to log out." : language === 'uk' ? "Авторизація пройшла успішно!\n\nНапишіть команду /logout, щоб вийти." : "Авторизация прошла успешно!\n\nНапишите комманду /logout чтобы выйти.";
@@ -87,7 +88,6 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
         const choosenId = resultId[1];
         try {
             const { data, status, error } = yield (0, requests_1.spotifyDown)(choosenId);
-            console.log(new Date(), 'get download response');
             if (status === 200 && data) {
                 const { metadata, link } = data;
                 const filePath = (0, path_1.join)(__dirname, `../../../files/spotify/${metadata.title}.mp3`);
@@ -118,7 +118,10 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                     let inputMedia = (0, helper_1.messageInlineMedia)(path, caption, ctx.t('try'));
                     yield ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
                         reply_markup: inputMedia.markup
-                    }).then(() => (0, fs_1.unlinkSync)(path));
+                    }).then(() => {
+                        if ((0, child_process_1.execSync)(path))
+                            (0, fs_1.unlinkSync)(path);
+                    });
                 }
             }
             else {

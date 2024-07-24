@@ -13,6 +13,7 @@ import { spotifyDown, spotifyTokenRefresh } from "../../utils/requests"
 import { spotifyInlineTracks } from "../options/spotify";
 import { connectToService, messageInlineMedia } from "../options/helper";
 import axios from "axios";
+import { execSync } from "child_process";
 // import { spotifyInlineTracks } from "../options/helpers"
 
 export const spotifySuccessAuth = async (userId: number, messageId: number, language: string) => {
@@ -81,8 +82,6 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
 
     try {
       const { data, status, error } = await spotifyDown(choosenId)
-      console.log(new Date(), 'get download response');
-      
       if (status === 200 && data) {
         const { metadata, link } = data
   
@@ -118,7 +117,9 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
           
           await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
             reply_markup: inputMedia.markup
-          }).then(() => unlinkSync(path))
+          }).then(() => {
+            if (execSync(path)) unlinkSync(path)
+          })
         }
       } else {
         let caption = `${ctx.t('trackError')}\n\n${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
