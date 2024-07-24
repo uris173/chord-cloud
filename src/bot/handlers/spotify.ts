@@ -2,18 +2,16 @@ import bot from "../bot"
 import { Context } from "../context"
 
 import { join } from 'path';
-import { readFile, writeFile, unlinkSync } from 'fs'
+import { readFile, writeFile, unlinkSync, existsSync } from 'fs'
 import { promisify } from 'util';
 import NodeID3 from 'node-id3';
 const writeFileAsync = promisify(writeFile);
-const readFileAsync = promisify(readFile);
 
 import { User } from "../../models/user.model"
 import { spotifyDown, spotifyTokenRefresh } from "../../utils/requests"
 import { spotifyInlineTracks } from "../options/spotify";
 import { connectToService, messageInlineMedia } from "../options/helper";
 import axios from "axios";
-import { execSync } from "child_process";
 // import { spotifyInlineTracks } from "../options/helpers"
 
 export const spotifySuccessAuth = async (userId: number, messageId: number, language: string) => {
@@ -118,7 +116,7 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
           await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
             reply_markup: inputMedia.markup
           }).then(() => {
-            if (execSync(path)) unlinkSync(path)
+            if (existsSync(path)) unlinkSync(path)
           })
         }
       } else {

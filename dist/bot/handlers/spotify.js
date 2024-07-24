@@ -19,13 +19,11 @@ const fs_1 = require("fs");
 const util_1 = require("util");
 const node_id3_1 = __importDefault(require("node-id3"));
 const writeFileAsync = (0, util_1.promisify)(fs_1.writeFile);
-const readFileAsync = (0, util_1.promisify)(fs_1.readFile);
 const user_model_1 = require("../../models/user.model");
 const requests_1 = require("../../utils/requests");
 const spotify_1 = require("../options/spotify");
 const helper_1 = require("../options/helper");
 const axios_1 = __importDefault(require("axios"));
-const child_process_1 = require("child_process");
 // import { spotifyInlineTracks } from "../options/helpers"
 const spotifySuccessAuth = (userId, messageId, language) => __awaiter(void 0, void 0, void 0, function* () {
     const text = language === 'en' ? "Authorization was successful!\n\nType the command /logout to log out." : language === 'uk' ? "Авторизація пройшла успішно!\n\nНапишіть команду /logout, щоб вийти." : "Авторизация прошла успешно!\n\nНапишите комманду /logout чтобы выйти.";
@@ -119,7 +117,7 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                     yield ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
                         reply_markup: inputMedia.markup
                     }).then(() => {
-                        if ((0, child_process_1.execSync)(path))
+                        if ((0, fs_1.existsSync)(path))
                             (0, fs_1.unlinkSync)(path);
                     });
                 }

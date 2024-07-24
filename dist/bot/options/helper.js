@@ -92,6 +92,7 @@ exports.useSession = useSession;
 const messageInlineMedia = (media, caption, tryText) => {
     const inputMedia = {
         type: 'audio',
+        // media: `https://chatapi.of-astora.uz/files/music/Yen.mp3`,
         media: `${process.env.SERVER_URI}/${media}`,
         caption,
         parse_mode: 'HTML',
