@@ -113,7 +113,7 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                     let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`;
                     let caption = `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`;
                     let path = `files/spotify/${metadata.title}.mp3`;
-                    let inputMedia = (0, helper_1.messageInlineMedia)(path, caption, ctx.t('try'));
+                    let inputMedia = (0, helper_1.messageInlineMedia)(encodeURI(path), caption, ctx.t('try'));
                     yield ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
                         reply_markup: inputMedia.markup
                     }).then(() => {
