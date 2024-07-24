@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const isDev = true
+const isDev = false
 const url = isDev ? process.env.LOCAL_URI : process.env.SERVER_URI
 const token = isDev ? process.env.DEV_TOKEN : process.env.TOKEN
 export { url, token }
