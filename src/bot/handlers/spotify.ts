@@ -111,9 +111,11 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
           let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`
           let caption = `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
           let path = `files/spotify/${metadata.title}.mp3`
+          // let path = `files/music/Skeletal I - Mourning Repairs.mp3`
+          // let path = `files/music/${metadata.title}.mp3`
           let inputMedia = messageInlineMedia(encodeURI(path), caption, ctx.t('try'))
-          
-          await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+
+          ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
             reply_markup: inputMedia.markup
           }).then(() => {
             if (existsSync(path)) unlinkSync(path)

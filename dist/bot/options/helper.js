@@ -90,9 +90,10 @@ const useSession = (ctx, next) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.useSession = useSession;
 const messageInlineMedia = (media, caption, tryText) => {
+    // console.log(`https://chatapi.of-astora.uz/${media}`);
     const inputMedia = {
         type: 'audio',
-        // media: `https://chatapi.of-astora.uz/files/music/Yen.mp3`,
+        // media: `https://chatapi.of-astora.uz/${media}`,
         media: `${process.env.SERVER_URI}/${media}`,
         caption,
         parse_mode: 'HTML',
