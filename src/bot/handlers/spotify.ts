@@ -1,8 +1,8 @@
 import bot from "../bot"
 import { Context } from "../context"
 
-import { join, resolve } from 'path';
-import { readFile, writeFile } from 'fs'
+import { join } from 'path';
+import { readFile, writeFile, unlinkSync } from 'fs'
 import { promisify } from 'util';
 import NodeID3 from 'node-id3';
 const writeFileAsync = promisify(writeFile);
@@ -80,17 +80,18 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
     const choosenId = resultId[1]
 
     try {
-      const { data, message, status } = await spotifyDown(choosenId)
+      const { data, status, error } = await spotifyDown(choosenId)
+      console.log(new Date(), 'get download response');
+      
       if (status === 200 && data) {
         const { metadata, link } = data
   
         const filePath = join(__dirname, `../../../files/spotify/${metadata.title}.mp3`)
-
         const songResponse = await axios.get(link, { responseType: 'arraybuffer' });
         const songBuffer = Buffer.from(songResponse.data);
         const coverResponse = await axios.get(metadata.cover, { responseType: 'arraybuffer' });
         const coverBuffer = Buffer.from(coverResponse.data);
-
+        
         const tags = {
           artist: metadata.artists,
           title: metadata.title,
@@ -112,36 +113,32 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
 
           let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`
           let caption = `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
-          let path = `${process.env.SERVER_URI}/files/music/Gravity.mp3`
+          let path = `files/spotify/${metadata.title}.mp3`
           let inputMedia = messageInlineMedia(path, caption, ctx.t('try'))
           
           await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
             reply_markup: inputMedia.markup
-          })
-        } else {
-
+          }).then(() => unlinkSync(path))
         }
       } else {
-  
+        let caption = `${ctx.t('trackError')}\n\n${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
+        let path = 'files/oh-no_jojo.mp3'
+        let inputMedia = messageInlineMedia(path, caption, ctx.t('try'))
+
+        await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+          reply_markup: inputMedia.markup
+        })
+        console.log(error);
       }
     } catch (error) {
-      
-    }
+      let caption = `${ctx.t('trackError')}\n\n${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
+      let path = 'files/oh-no_jojo.mp3'
+      let inputMedia = messageInlineMedia(path, caption, ctx.t('try'))
 
-    // let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`
-    // try {
-    //   await ctx.api.editMessageMediaInline(inlineMessageId, {
-    //     type: 'audio',
-    //     media: `${process.env.SERVER_URI}/files/oh-no_jojo.mp3`,
-    //     caption: `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`,
-    //     parse_mode: 'HTML',
-    //   }, {
-    //     reply_markup: {
-    //       inline_keyboard: [ [ { text: ctx.t('try'), url: 'https://t.me/rhytmifybot?start=/start' } ] ]
-    //     }
-    //   })
-    // } catch (error) {
-    //   console.error(error);
-    // }
+      await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+        reply_markup: inputMedia.markup
+      })
+      console.error(error);
+    }
   }
 }

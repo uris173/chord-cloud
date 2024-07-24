@@ -28,6 +28,7 @@ donateWallets = For tea/coffee for the admin
 tokenError = Token error!
 serverError = Oops, something went wrong. Server error!
 emptyResult = Oops, I didn't find the song...
+trackError = An error occurred while sending the track...
 
 # Keyboard
 start = Start bot

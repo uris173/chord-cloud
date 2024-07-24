@@ -28,6 +28,7 @@ donateWallets = Адміну на чай/каву
 tokenError = Помилка токена!
 serverError = Упс, щось пішло не так. Помилка сервера!
 emptyResult = Ой, я не знайшов пісні...
+trackError = Сталася помилка при відправці треку...
 
 # Keyboard
 start = Запустити бота

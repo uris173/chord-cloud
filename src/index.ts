@@ -1,6 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+const isDev = true
+const url = isDev ? process.env.LOCAL_URI : process.env.SERVER_URI
+const token = isDev ? process.env.DEV_TOKEN : process.env.TOKEN
+export { url, token }
+
 import express from "express";
 import bot from "./bot/bot";
 import { webhookCallback } from "grammy";

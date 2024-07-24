@@ -1,9 +1,10 @@
 import { InlineKeyboard, Keyboard } from "grammy";
 import { Context } from "../context";
+import { url } from "../..";
 
 const musicInlineKeyboard = (userId: number, messageId: number) => {
   return new InlineKeyboard()
-  .url('Spotify ↗️', `${process.env.LOCAL_URI}/spotify/auth/${userId}/${messageId}`)
+  .url('Spotify ↗️', `${url}/spotify/auth/${userId}/${messageId}`)
 }
 
 const languagesKeyboard = (ctx: Context) => {

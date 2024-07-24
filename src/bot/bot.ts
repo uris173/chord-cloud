@@ -5,8 +5,9 @@ import { i18n } from "./i18n";
 import { getSessionKey, useSession } from "./options/helper";
 import { mainComposer } from "./features/main"
 import { spotifyComposer } from "./features/spotify"
+import { token } from "..";
 
-const bot = new Bot<Context>(process.env.TOKEN!);
+const bot = new Bot<Context>(token!);
 
 const initialSessionData = (): SessionData => ({ });
 export const sessionStorage = new MemorySessionStorage<SessionData>()

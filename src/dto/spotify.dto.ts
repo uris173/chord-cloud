@@ -1,7 +1,6 @@
 export interface SpotifyErrorDto {
   data?: any;
   message: string;
-  description: string;
 }
 
 export interface SpotifyAuthCodeDto {

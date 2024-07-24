@@ -4,8 +4,9 @@ import { Router, Request, Response } from "express";
 
 import { spotifyAuthCode } from "../utils/requests";
 import { spotifySuccessAuth } from "../bot/handlers/spotify";
+import { url } from "..";
 
-const redirectUri = `${process.env.LOCAL_URI}/spotify/auth-code`;
+const redirectUri = `${url}/spotify/auth-code`;
 const router = Router();
 
 router.get('/auth/:userId/:messageId', async (req: Request, res: Response) => {

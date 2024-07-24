@@ -33,8 +33,7 @@ const spotifyApiRequest = async <T>(config: AxiosRequestConfig): Promise<Respons
         status: error.response.status,
         error: {
           data: error.response.data,
-          message: "Api error",
-          description: 'Error in "spotifyApiRequest" function',
+          message: "Api error"
         },
       };
     } else {
@@ -42,8 +41,7 @@ const spotifyApiRequest = async <T>(config: AxiosRequestConfig): Promise<Respons
       return {
         status: 500,
         error: {
-          message: "Server error",
-          description: 'Server error in "spotifyApiRequest" function',
+          message: "Server error"
         },
       };
     }
