@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p . && xcopy src\\bot\\locales dist\\bot\\locales /E /I /Y"
   },
   "keywords": [],
   "author": "",
