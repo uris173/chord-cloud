@@ -114,12 +114,13 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
           // let path = `files/music/Skeletal I - Mourning Repairs.mp3`
           // let path = `files/music/${metadata.title}.mp3`
           let inputMedia = messageInlineMedia(encodeURI(path), caption, ctx.t('try'))
-
-          ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
-            reply_markup: inputMedia.markup
-          }).then(() => {
-            if (existsSync(path)) unlinkSync(path)
-          })
+          if (inputMedia) {
+            ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+              reply_markup: inputMedia.markup
+            }).then(() => {
+              if (existsSync(path)) unlinkSync(path)
+            })
+          }
         }
       } else {
         let caption = `${ctx.t('trackError')}\n\n${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`

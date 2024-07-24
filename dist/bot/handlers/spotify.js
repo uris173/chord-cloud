@@ -116,12 +116,14 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                     // let path = `files/music/Skeletal I - Mourning Repairs.mp3`
                     // let path = `files/music/${metadata.title}.mp3`
                     let inputMedia = (0, helper_1.messageInlineMedia)(encodeURI(path), caption, ctx.t('try'));
-                    ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
-                        reply_markup: inputMedia.markup
-                    }).then(() => {
-                        if ((0, fs_1.existsSync)(path))
-                            (0, fs_1.unlinkSync)(path);
-                    });
+                    if (inputMedia) {
+                        ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+                            reply_markup: inputMedia.markup
+                        }).then(() => {
+                            if ((0, fs_1.existsSync)(path))
+                                (0, fs_1.unlinkSync)(path);
+                        });
+                    }
                 }
             }
             else {
