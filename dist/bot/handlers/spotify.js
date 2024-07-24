@@ -86,6 +86,7 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
         const choosenId = resultId[1];
         try {
             const { data, status, error } = yield (0, requests_1.spotifyDown)(choosenId);
+            console.log(new Date(), 'responsed');
             if (status === 200 && data) {
                 const { metadata, link } = data;
                 const filePath = (0, path_1.join)(__dirname, `../../../files/spotify/${metadata.title}.mp3`);
@@ -93,6 +94,7 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                 const songBuffer = Buffer.from(songResponse.data);
                 const coverResponse = yield axios_1.default.get(metadata.cover, { responseType: 'arraybuffer' });
                 const coverBuffer = Buffer.from(coverResponse.data);
+                console.log(new Date(), 'geted song');
                 const tags = {
                     artist: metadata.artists,
                     title: metadata.title,
@@ -108,22 +110,25 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                     },
                 };
                 const successBuffer = node_id3_1.default.write(tags, songBuffer);
+                console.log(new Date(), 'buffered');
                 if (successBuffer) {
                     yield writeFileAsync(filePath, successBuffer);
+                    console.log(new Date(), 'downloaded');
                     let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`;
                     let caption = `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`;
                     let path = `files/spotify/${metadata.title}.mp3`;
                     // let path = `files/music/Skeletal I - Mourning Repairs.mp3`
                     // let path = `files/music/${metadata.title}.mp3`
+                    console.log(new Date(), 'input media');
                     let inputMedia = (0, helper_1.messageInlineMedia)(encodeURI(path), caption, ctx.t('try'));
-                    if (inputMedia) {
-                        ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
-                            reply_markup: inputMedia.markup
-                        }).then(() => {
-                            if ((0, fs_1.existsSync)(path))
-                                (0, fs_1.unlinkSync)(path);
-                        });
-                    }
+                    console.log(new Date(), 'geted input media');
+                    yield ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
+                        reply_markup: inputMedia.markup
+                    }).then(() => {
+                        console.log(new Date(), 'edit message');
+                        if ((0, fs_1.existsSync)(path))
+                            (0, fs_1.unlinkSync)(path);
+                    });
                 }
             }
             else {
@@ -133,7 +138,7 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                 yield ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
                     reply_markup: inputMedia.markup
                 });
-                console.log(error);
+                console.error(error);
             }
         }
         catch (error) {
@@ -144,6 +149,7 @@ const chosenSpotifyTrack = (ctx) => __awaiter(void 0, void 0, void 0, function* 
                 reply_markup: inputMedia.markup
             });
             console.error(error);
+            throw new Error;
         }
     }
 });
