@@ -87,7 +87,6 @@ export const useSession = async (ctx: Context, next: NextFunction) => {
 }
 
 export const messageInlineMedia = (media: string, caption: string, tryText: string): MessageInlineMedia => {
-  // console.log(`https://chatapi.of-astora.uz/${media}`);
   const inputMedia: InputMediaAudio<InputFile > = {
     type: 'audio',
     // media: `https://chatapi.of-astora.uz/${media}`,

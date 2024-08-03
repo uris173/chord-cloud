@@ -80,7 +80,6 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
 
     try {
       const { data, status, error } = await spotifyDown(choosenId)
-      console.log(new Date(), 'responsed');
       
       if (status === 200 && data) {
         const { metadata, link } = data
@@ -90,7 +89,6 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
         const songBuffer = Buffer.from(songResponse.data);
         const coverResponse = await axios.get(metadata.cover, { responseType: 'arraybuffer' });
         const coverBuffer = Buffer.from(coverResponse.data);
-        console.log(new Date(), 'geted song');
         
         const tags = {
           artist: metadata.artists,
@@ -108,23 +106,18 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
         }
   
         const successBuffer = NodeID3.write(tags, songBuffer);
-        console.log(new Date(), 'buffered');
         if (successBuffer) {
           await writeFileAsync(filePath, successBuffer);
-          console.log(new Date(), 'downloaded');
 
           let trackLink = `<a href="https://open.spotify.com/track/${choosenId}">Spotify</a>`
           let caption = `${trackLink} | ${ctx.t('chanel')} | ${ctx.t('group')} | ${ctx.t('bot')}`
-          let path = `files/spotify/${metadata.title}.mp3`
+          // let path = `files/spotify/${metadata.title}.mp3`
           // let path = `files/music/Skeletal I - Mourning Repairs.mp3`
-          // let path = `files/music/${metadata.title}.mp3`
-          console.log(new Date(), 'input media');
+          let path = `files/music/${metadata.title}.mp3`
           let inputMedia = messageInlineMedia(encodeURI(path), caption, ctx.t('try'))
-          console.log(new Date(), 'geted input media');
           await ctx.api.editMessageMediaInline(inlineMessageId, inputMedia.input, {
             reply_markup: inputMedia.markup
           }).then(() => {
-            console.log(new Date(), 'edit message');
             if (existsSync(path)) unlinkSync(path)
           })
         }
@@ -147,7 +140,6 @@ export const chosenSpotifyTrack = async (ctx: Context) => {
         reply_markup: inputMedia.markup
       })
       console.error(error);
-      throw new Error
     }
   }
 }
